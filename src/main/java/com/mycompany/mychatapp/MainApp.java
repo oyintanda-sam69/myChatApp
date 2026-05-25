@@ -14,7 +14,7 @@ public class MainApp {
 
     public static void main(String[] args) {
 
-        Scanner input = new Scanner(System.in);
+       Scanner input = new Scanner(System.in);
         Login login = new Login();
 
         //Call exiting methods
