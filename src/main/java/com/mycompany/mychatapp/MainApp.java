@@ -4,77 +4,77 @@
  */
 package com.mycompany.mychatapp;
 
+import java.util.Scanner;
+
 /**
  *
  * @author os828
  */
-import java.util.Scanner;
-
 public class MainApp {
 
     public static void main(String[] args) {
 
-       Scanner input = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
         Login login = new Login();
 
-        //Call exiting methods
-        login.registerUser();
-        boolean loggedIn= false;
-        
-        // Get user details
+        System.out.println("=== Welcome to QuickChat Registration ===\n");
+
+        // ── Collect first and last name ──────────────────────────────────────
         System.out.print("Enter first name: ");
-        String firstName = input.nextLine();
+        login.setFirstName(input.nextLine());
 
         System.out.print("Enter last name: ");
-        String lastName = input.nextLine();
+        login.setLastName(input.nextLine());
 
-        login.setFirstName(firstName);
-        login.setLastName(lastName);
-
-        // USERNAME LOOP
+        // ── Username loop (repeat until valid) ───────────────────────────────
         String username;
-        String usernameMessage;
         do {
-            System.out.print("Enter username: ");
+            System.out.print("Enter username (must contain _ and be ≤5 chars): ");
             username = input.nextLine();
-            usernameMessage = login.registerUserName(username);
-            System.out.println(usernameMessage);
+            System.out.println(login.registerUserName(username));
         } while (!login.checkUserName(username));
 
-        // PASSWORD LOOP
+        // ── Password loop (repeat until valid) ───────────────────────────────
         String password;
-        String passwordMessage;
         do {
-            System.out.print("Enter password: ");
+            System.out.print("Enter password (8+ chars, uppercase, digit, special): ");
             password = input.nextLine();
-            passwordMessage = login.registerPassword(password);
-            System.out.println(passwordMessage);
+            System.out.println(login.registerPassword(password));
         } while (!login.checkPasswordComplexity(password));
 
-        // CELL PHONE LOOP
+        // ── Cell phone loop (repeat until valid) ─────────────────────────────
         String cell;
-        String cellMessage;
         do {
-            System.out.print("Enter cell phone number (with international code): ");
+            System.out.print("Enter cell phone number (with international code e.g. +27...): ");
             cell = input.nextLine();
-            cellMessage = login.registerCellPhoneNumber(cell);
-            System.out.println(cellMessage);
+            System.out.println(login.registerCellPhoneNumber(cell));
         } while (!login.checkCellPhoneNumber(cell));
 
-        // LOGIN SECTION
-        System.out.println("\n--- LOGIN ---");
+        // ── Login section ─────────────────────────────────────────────────────
+        System.out.println("\n=== Login ===");
 
-        System.out.print("Enter username: ");
-        String loginUser = input.nextLine();
+        boolean loggedIn = false;
+        while (!loggedIn) {
+            System.out.print("Enter username: ");
+            String loginUser = input.nextLine();
 
-        System.out.print("Enter password: ");
-        String loginPass = input.nextLine();
+            System.out.print("Enter password: ");
+            String loginPass = input.nextLine();
 
-        System.out.println(login.returnLoginStatus(loginUser, loginPass));
-        
-        //Print out the correct login message
-        String loginMessage = login.returningLoginStatus(loggedIn);
-        System.out.println(loginMessage);  // capital 'M' fixed → was 'LoginMessage'
-    input.close();
+            String status = login.returnLoginStatus(loginUser, loginPass);
+            System.out.println(status);
+
+            if (login.loginUser(loginUser, loginPass)) {
+                loggedIn = true;
+            }
+        }
+
+        // ── Part 3: Load previously stored messages from JSON ─────────────────
+        Message.loadStoredMessages();
+
+        input.close();
+
+        // ── Hand off to the main chat menu ────────────────────────────────────
+    
     }
 }
